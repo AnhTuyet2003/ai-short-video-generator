@@ -14,6 +14,6 @@ export async function POST(req) {
         captions,
         imageList,
         createdBy,
-    });
+    }).returning({id: VideoData?.id});
     return NextResponse.json({ id: result[0].id });
 }

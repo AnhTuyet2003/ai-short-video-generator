@@ -33,8 +33,8 @@ function CreateNew() {
     const [imageList, setImageList] = useState();
     const {videoData, setVideoData} = useContext(VideoDataContext);
     const {user} = useUser();
-    const [playVideo, setPlayVideo] = useState(true);
-    const [videoId, setVideoId] = useState(1);
+    const [playVideo, setPlayVideo] = useState(false);
+    const [videoId, setVideoId] = useState();
 
     const onHandleInputChange = (fieldName, fieldValue) => {
         console.log(fieldName, fieldValue);
@@ -183,7 +183,7 @@ function CreateNew() {
                 <Button onClick={onCreateClickHandler} className={'mt-10 w-full'} variant='primary'>Create short video</Button>
             </div>
             <CustomLoading loading={loading}/>
-            <PlayerDialog playVideo={playVideo} videoId={videoId} />
+            {playVideo && (<PlayerDialog playVideo={playVideo} videoId={videoId} />)}
         </div>
     )
 }
