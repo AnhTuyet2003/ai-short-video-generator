@@ -34,3 +34,140 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## API Documentation
+
+### 2. Generate Video Script
+**POST** `/api/get-video-script`
+
+**Request:**
+```json
+{
+    "prompt": "Your prompt for the AI model"
+}
+```
+**Response:**
+```json
+{
+    "result": {
+        // AI-generated script as JSON
+    }
+}
+```
+
+---
+
+### 3. Generate Image
+**POST** `/api/generate-image`
+
+**Request:**
+```json
+{
+    "prompt": "Describe the image you want to generate"
+}
+```
+**Response:**
+```json
+{
+    "result": "https://...firebase.../your-image.png"
+}
+```
+
+---
+
+### 4. Generate Audio (Text-to-Speech)
+**POST** `/api/generate-audio`
+
+**Request:**
+```json
+{
+    "text": "Text to convert to speech",
+    "id": "unique-id-for-audio"
+}
+```
+**Response:**
+```json
+{
+    "Result": "https://...firebase.../your-audio.mp3"
+}
+```
+
+---
+
+### 5. Generate Caption (Speech-to-Text)
+**POST** `/api/generate-caption`
+
+**Request:**
+```json
+{
+    "audioFileUrl": "https://...firebase.../your-audio.mp3"
+}
+```
+**Response:**
+```json
+[
+    {
+        "text": "word",
+        "start": 100,
+        "end": 500
+    },
+    ...
+]
+```
+
+---
+
+### 6. Save Video Data
+**POST** `/api/save-video-data`
+
+**Request:**
+```json
+{
+    "videoScript": "...",
+    "audioFileUrl": "...",
+    "captions": [...],
+    "imageList": [...],
+    "createdBy": "user@email.com"
+}
+```
+**Response:**
+```json
+{
+    "id": 123
+}
+```
+
+---
+
+### 7. Get Video Data by ID
+**GET** `/api/get-video-data?id=VIDEO_ID`
+
+**Response:**
+```json
+{
+    "id": 123,
+    "script": "...",
+    "audioFileUrl": "...",
+    "captions": [...],
+    "imageList": [...],
+    "createdBy": "user@email.com"
+}
+```
+
+---
+
+### 8. Proxy Audio (Bypass CORS)
+**GET** `/api/proxy-audio?url=ENCODED_AUDIO_URL`
+
+**Description:**  
+Proxy audio file from a remote URL (e.g. Firebase Storage) to bypass CORS restrictions.  
+Supports HTTP Range requests for seeking.
+
+**Response:**  
+Returns the audio file stream.
+
+---
+
+> **Lưu ý:**  
+> - Một số API yêu cầu truyền token hoặc xác thực, hãy kiểm tra lại cấu hình bảo mật nếu triển khai thực tế.
+> - Các trường dữ liệu có thể thay đổi tùy theo cấu hình backend của bạn.
