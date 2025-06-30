@@ -1,8 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# AI Short Video Generator
+
+This project is an AI-powered short video generator and editor. Users can input a prompt, and the system will automatically generate a video script, create images and audio using AI, transcribe captions, and assemble everything into a customizable video. The editor allows users to adjust text, animations, stickers, music, and video size before exporting the final video. Rendering is handled by Remotion on Google Cloud Run for scalable, automated video production.
+
+---
+
+## Main Features
+
+- **AI-powered video script generation** from user prompt
+- **Automatic image generation** for video scenes
+- **Text-to-speech audio generation** and **speech-to-text captioning**
+- **Video editor** with:
+  - Font, color, animation, and sticker customization
+  - Music selection and upload
+  - Adjustable video width and height (aspect ratio)
+- **Real-time video preview** using Remotion Player
+- **Export and render video** on Remotion CloudRun (Google Cloud Run)
+- **Downloadable video output** with public URL
+- **User authentication** and video management
+- **API endpoints** for all major video generation and editing tasks
+
+---
+
+## Technologies Used
+
+- **Next.js** (React framework for SSR/SSG)
+- **React** (UI library)
+- **Remotion** (Video rendering with React)
+- **Remotion CloudRun** (Serverless video rendering on Google Cloud Run)
+- **Google Cloud Run** (Serverless compute platform)
+- **Firebase Storage** (Media file storage)
+- **Drizzle ORM** (Database ORM)
+- **PostgreSQL** (Database)
+- **Inngest** (Event-driven background jobs)
+- **TypeScript** (Type safety for JS/TS files)
+- **Tailwind CSS** (Utility-first CSS framework)
+- **Lucide React** (Icon library)
+- **Axios** (HTTP client)
+- **Sonner** (Toast notifications)
+- **Google Fonts** (Web fonts)
+- **Vercel** (Deployment platform for Next.js)
+- **Bun/Yarn/PNPM/NPM** (Package managers)
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### 1. Clone the repository
+
+```bash
+git clone <your-repo-url>
+cd ai-short-video-generator
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+# or
+bun install
+```
+
+### 3. Configure environment variables
+
+- Copy `.env.example` to `.env.local` and fill in your Firebase, Cloud Run, and database credentials.
+
+### 4. Run the development server
 
 ```bash
 npm run dev
@@ -16,28 +82,11 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
 
 ## API Documentation
 
-### 2. Generate Video Script
+### 1. Generate Video Script
 **POST** `/api/get-video-script`
 
 **Request:**
@@ -57,7 +106,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ---
 
-### 3. Generate Image
+### 2. Generate Image
 **POST** `/api/generate-image`
 
 **Request:**
@@ -75,7 +124,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ---
 
-### 4. Generate Audio (Text-to-Speech)
+### 3. Generate Audio (Text-to-Speech)
 **POST** `/api/generate-audio`
 
 **Request:**
@@ -94,7 +143,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ---
 
-### 5. Generate Caption (Speech-to-Text)
+### 4. Generate Caption (Speech-to-Text)
 **POST** `/api/generate-caption`
 
 **Request:**
@@ -117,7 +166,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ---
 
-### 6. Save Video Data
+### 5. Save Video Data
 **POST** `/api/save-video-data`
 
 **Request:**
@@ -139,7 +188,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ---
 
-### 7. Get Video Data by ID
+### 6. Get Video Data by ID
 **GET** `/api/get-video-data?id=VIDEO_ID`
 
 **Response:**
@@ -156,7 +205,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ---
 
-### 8. Proxy Audio (Bypass CORS)
+### 7. Proxy Audio (Bypass CORS)
 **GET** `/api/proxy-audio?url=ENCODED_AUDIO_URL`
 
 **Description:**  
@@ -168,24 +217,130 @@ Returns the audio file stream.
 
 ---
 
-## Main Features
+### 8. Save Video Edit Config
+**POST** `/api/save-video-edit`
 
-- AI-powered video script generation from user prompt
-- Automatic image generation for video scenes
-- Text-to-speech audio generation and speech-to-text captioning
-- Video editor with:
-  - Font, color, animation, and sticker customization
-  - Music selection and upload
-  - Adjustable video width and height (aspect ratio)
-- Real-time video preview using Remotion Player
-- Export and render video on Remotion CloudRun (Google Cloud Run)
-- Downloadable video output with public URL
-- User authentication and video management
-- API endpoints for all major video generation and editing tasks
+**Request:**
+```json
+{
+    "videoId": 123,
+    "editConfig": {
+        "font": "Arial",
+        "color": "#FFFFFF",
+        "animation": "fade-in",
+        "stickers": ["sticker1", "sticker2"],
+        "music": "background-music.mp3",
+        "aspectRatio": "16:9"
+    }
+}
+```
+**Response:**
+```json
+{
+    "success": true
+}
+```
+
+---
+
+### 9. Get Audio Link (Firebase)
+**GET** `/api/get-audio-link?name=FILENAME`
+
+**Response:**
+```json
+{
+    "url": "https://...firebase.../your-audio.mp3"
+}
+```
+
+---
+
+### 10. Save Audio to Firebase
+**POST** `/api/save-audio-firebase`
+
+**Request:**
+```json
+{
+    "id": "unique-id-for-audio",
+    "audioData": "base64-encoded-audio-data"
+}
+```
+**Response:**
+```json
+{
+    "success": true,
+    "url": "https://...firebase.../your-audio.mp3"
+}
+```
+
+---
+
+### 11. Render Video (Trigger Inngest)
+**POST** `/api/render`
+
+**Request:**
+```json
+{
+    "videoId": 123
+}
+```
+**Response:**
+```json
+{
+    "success": true,
+    "jobId": "inngest-job-id"
+}
+```
+
+---
+
+### 12. Inngest API (Background Jobs)
+**GET/POST/PUT** `/api/inngest`
+
+**Description:**  
+Gọi API Inngest để quản lý các job nền (background jobs) như render video, gửi thông báo, v.v.
+
+**Request Example (POST):**
+```json
+{
+    "event": "video.render",
+    "data": {
+        "videoId": 123
+    }
+}
+```
+
+**Response:**
+```json
+{
+    "success": true,
+    "jobId": "inngest-job-id"
+}
+```
+
+---
+
+### 13. Save Video Output Link
+**POST** `/api/save-link-video`
+
+**Request:**
+```json
+{
+    "videoId": 123,
+    "outputUrl": "https://...firebase.../your-output-video.mp4"
+}
+```
+**Response:**
+```json
+{
+    "success": true
+}
+```
+
+---
 
 > **Lưu ý:**  
 > - Một số API yêu cầu truyền token hoặc xác thực, hãy kiểm tra lại cấu hình bảo mật nếu triển khai thực tế.
 > - Các trường dữ liệu có thể thay đổi tùy theo cấu hình backend của bạn.
-
 
 npx inngest-cli@latest dev
