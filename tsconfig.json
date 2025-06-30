@@ -31,7 +31,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "inngest/client.js", "app/api/inngest/route.jsx"  ],
   "exclude": [
     "node_modules"
   ]

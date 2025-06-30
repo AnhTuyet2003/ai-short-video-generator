@@ -1,3 +1,9 @@
+import { AbsoluteFill } from "remotion";
+
 export const MyComposition = () => {
-  return null;
+  return (
+    <AbsoluteFill>
+      <h2>Hello World</h2>
+    </AbsoluteFill>
+  );
 };

@@ -168,6 +168,24 @@ Returns the audio file stream.
 
 ---
 
+## Main Features
+
+- AI-powered video script generation from user prompt
+- Automatic image generation for video scenes
+- Text-to-speech audio generation and speech-to-text captioning
+- Video editor with:
+  - Font, color, animation, and sticker customization
+  - Music selection and upload
+  - Adjustable video width and height (aspect ratio)
+- Real-time video preview using Remotion Player
+- Export and render video on Remotion CloudRun (Google Cloud Run)
+- Downloadable video output with public URL
+- User authentication and video management
+- API endpoints for all major video generation and editing tasks
+
 > **Lưu ý:**  
 > - Một số API yêu cầu truyền token hoặc xác thực, hãy kiểm tra lại cấu hình bảo mật nếu triển khai thực tế.
 > - Các trường dữ liệu có thể thay đổi tùy theo cấu hình backend của bạn.
+
+
+npx inngest-cli@latest dev

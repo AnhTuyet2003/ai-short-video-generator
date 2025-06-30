@@ -1,8 +1,7 @@
 "use client"
 
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import SelectTopic from './_components/SelectTopic';
-import { useState } from 'react';
 import SelectStyle from './_components/SelectStyle';
 import SelectDuration from './_components/SelectDuration';
 import { Button } from '@/components/ui/button';
@@ -12,6 +11,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { VideoDataContext } from '@/app/_context/VideoDataContext';
 import { useUser } from '@clerk/nextjs';
 import PlayerDialog from './_components/PlayerDialog';
+import { UserDetailContext } from '@/app/_context/UserDetailContext';
+import { toast } from "sonner"
+import { useRouter } from "next/navigation";
 
 function getScenes(data) {
     if (Array.isArray(data)) return data;
@@ -25,6 +27,7 @@ function getScenes(data) {
 }
 
 function CreateNew() {
+    const router = useRouter();
     const [formData, setFromData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [videoScript, setVideoScript] = useState();
@@ -35,6 +38,7 @@ function CreateNew() {
     const {user} = useUser();
     const [playVideo, setPlayVideo] = useState(false);
     const [videoId, setVideoId] = useState();
+    const {userDetail, setUserDetail} = useContext(UserDetailContext);
 
     const onHandleInputChange = (fieldName, fieldValue) => {
         console.log(fieldName, fieldValue);
@@ -46,13 +50,17 @@ function CreateNew() {
     }
 
     const onCreateClickHandler = () => {
-        GetVideoScript();
-        //GenerateAudioFile(scriptData);
-        //GenerateAudioCaption(fileUrl);
-        //GenerateImage();
+        // if(userDetail?.credits <=0) {
+        //     toast("You don't have enough credits to create a video");
+        //     return;
+        // }
+        // GetVideoScript();
+        saveVideoData();
     }
 
-    //Get the video script
+    /**
+     * * Get video script from OpenAI API
+     */
     const GetVideoScript = async() => {
         setLoading(true);
         const prompt ='write a script to generate '+formData.duration+' video on topic: '+formData.topic+' along with AI image prompt in '+formData.imageStyle+' format for each scene and give me result in JSON format with imagePrompt and ContentText as field'
@@ -79,7 +87,7 @@ function CreateNew() {
         let script = '';
         const id = uuidv4();
 
-        const scenes = getScenes(videoScriptData); // <-- dùng hàm này
+        const scenes = getScenes(videoScriptData); 
 
         for (const element of scenes) {
             script += element.ContentText + ' ';
@@ -154,18 +162,43 @@ function CreateNew() {
     }, [videoData]);
 
     const saveVideoData = async() => {
-        setLoading(true);
-        const result = await axios.post('/api/save-video-data', {
-            videoScript: videoData.videoScript,
-            audioFileUrl: videoData.audioFileUrl,
-            captions: videoData.captions,
-            imageList: videoData.imageList,
-            createdBy: user?.primaryEmailAddress?.emailAddress,
-        });
-        setVideoId(result.data.id);
-        setPlayVideo(true);
-        console.log(result)
-        setLoading(false)
+        // setLoading(true);
+        // const result = await axios.post('/api/save-video-data', {
+        //     videoScript: videoData.videoScript,
+        //     audioFileUrl: videoData.audioFileUrl,
+        //     captions: videoData.captions,
+        //     imageList: videoData.imageList,
+        //     createdBy: user?.primaryEmailAddress?.emailAddress,
+        // });
+        // await UpdateUserCredits();
+        // setVideoId(result.data.id);
+        // setPlayVideo(true);
+        // console.log(result)
+        // setLoading(false)
+
+        // // Chuyển hướng sang trang editor với id vừa tạo
+        let id = "15"
+        router.push(`/dashboard/editor/${id}`); //result.data.id
+    }
+
+    /**
+     * Update user credits after creating video
+     */
+    const UpdateUserCredits = async () => {
+        const newCredits = (userDetail?.credits ?? 0) - 10;
+        try {
+            await axios.post('/api/update-user-credits', {
+                email: user?.primaryEmailAddress?.emailAddress,
+                credits: newCredits
+            });
+            setUserDetail(prev => ({
+                ...prev,
+                credits: newCredits
+            }));
+            setVideoData(null);
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     return (
